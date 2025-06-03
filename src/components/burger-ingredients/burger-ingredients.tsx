@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, FC } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';
@@ -7,45 +7,36 @@ import { useSelector } from '../../services/store';
 import { ingredientsSlice } from '../../services/slices/ingredients';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
+  // Получаем ингредиенты из состояния Redux
   const { buns, mains, sauces } = useSelector(
     ingredientsSlice.selectors.selectIngredientState
   );
+
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
+
+  // Рефы для заголовков секций
   const titleBunRef = useRef<HTMLHeadingElement>(null);
   const titleMainRef = useRef<HTMLHeadingElement>(null);
   const titleSaucesRef = useRef<HTMLHeadingElement>(null);
 
-  const [bunsRef, inViewBuns] = useInView({
-    threshold: 0
-  });
+  // Хуки наблюдения за видимостью секций
+  const [bunsRef, inViewBuns] = useInView({ threshold: 0 });
+  const [mainsRef, inViewMains] = useInView({ threshold: 0 });
+  const [saucesRef, inViewSauces] = useInView({ threshold: 0 });
 
-  const [mainsRef, inViewFilling] = useInView({
-    threshold: 0
-  });
-
-  const [saucesRef, inViewSauces] = useInView({
-    threshold: 0
-  });
-
+  // Обновляем текущую вкладку в зависимости от видимости
   useEffect(() => {
-    if (inViewBuns) {
-      setCurrentTab('bun');
-    } else if (inViewSauces) {
-      setCurrentTab('sauce');
-    } else if (inViewFilling) {
-      setCurrentTab('main');
-    }
-  }, [inViewBuns, inViewFilling, inViewSauces]);
+    if (inViewBuns) setCurrentTab('bun');
+    else if (inViewSauces) setCurrentTab('sauce');
+    else if (inViewMains) setCurrentTab('main');
+  }, [inViewBuns, inViewMains, inViewSauces]);
 
-  const onTabClick = (tab: string) => {
-    setCurrentTab(tab as TTabMode);
-    if (tab === 'bun')
-      titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'main')
-      titleMainRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'sauce')
-      titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // Обработчик клика по вкладке — плавно прокручиваем к секции
+  const onTabClick = (tab: TTabMode) => {
+    setCurrentTab(tab);
+    if (tab === 'bun') titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (tab === 'main') titleMainRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (tab === 'sauce') titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

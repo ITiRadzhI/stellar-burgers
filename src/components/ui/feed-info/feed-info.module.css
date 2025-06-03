@@ -1,22 +1,7 @@
 .columns {
   display: flex;
-  justify-content: left;
+  justify-content: flex-start; 
   align-items: flex-start;
-}
-.column {
-  display: inline;
-  min-width: 50%;
-}
-
-.list {
-  list-style: none;
-  margin: 0;
-  padding-left: 0;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  max-height: 180px;
-  overflow: hidden;
 }
 
 .title {
@@ -32,3 +17,20 @@
 .content {
   text-align: left;
 }
+
+.column {
+  display: inline-block; 
+  min-width: 50%;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-height: 180px;
+  overflow: hidden;
+}
+

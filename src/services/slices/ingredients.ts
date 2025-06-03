@@ -37,13 +37,18 @@ export const ingredientsSlice = createSlice({
       .addCase(loadIngredients.rejected, (state) => {
         state.isLoading = false;
       });
-  },
-  selectors: {
-    selectIngredientState: (state) => state,
-    getingredients: (state) => state.ingredients,
-    selectIngredientById: (state, payload): TIngredient | undefined =>
-      state.ingredients.find((ingredient) => ingredient._id === payload.id)
   }
 });
 
-export const { getingredients } = ingredientsSlice.selectors;
+// Селекторы определяются отдельно
+
+import { RootState } from '../store';
+
+export const selectIngredientState = (state: RootState) => state.ingredients;
+
+export const getingredients = (state: RootState) => state.ingredients.ingredients;
+
+export const selectIngredientById = (state: RootState, id: string): TIngredient | undefined =>
+  state.ingredients.ingredients.find((ingredient) => ingredient._id === id);
+
+export default ingredientsSlice.reducer;

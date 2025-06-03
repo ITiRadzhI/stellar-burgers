@@ -1,1 +1,1 @@
-export { FeedUI } from './feed';
+export { FeedDisplay } from './feed';

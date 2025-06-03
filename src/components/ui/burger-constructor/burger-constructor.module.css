@@ -8,9 +8,8 @@
 
 .elements {
   min-height: 100px;
-
   overflow-y: scroll;
-  list-style-type: none;
+  list-style: none;
   margin: 0;
   padding: 0;
 }
@@ -41,9 +40,9 @@
   justify-content: center;
   align-items: center;
   border-radius: var(--common-border-radius-s);
-  background: var(--background-element);
+  background-color: var(--background-element);
   min-height: 80px;
-  font-family: 'Jet Brains Mono';
+  font-family: 'Jet Brains Mono', monospace;
   font-size: 16px;
   line-height: 24px;
   color: #f2f2f3;
@@ -62,6 +61,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-bottom: 16px;
 }
 
 .element:last-child {

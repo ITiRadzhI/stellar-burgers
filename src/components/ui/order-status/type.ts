@@ -1,4 +1,4 @@
-export type OrderStatusUIProps = {
+export type StatusDisplayProps = {
   textStyle: string;
   text: string;
 };

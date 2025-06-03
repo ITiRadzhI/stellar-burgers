@@ -1,17 +1,17 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 import styles from './profile-orders.module.css';
 
-import { ProfileOrdersUIProps } from './type';
-import { ProfileMenu, OrdersList } from '@components';
+import { UserOrdersProps } from './type';
+import { ProfileMenu, OrdersDisplay } from '@components';
 
-export const ProfileOrdersUI: FC<ProfileOrdersUIProps> = ({ orders }) => (
-  <main className={`${styles.main}`}>
+export const UserOrdersPage: FC<UserOrdersProps> = ({ orders }) => (
+  <main className={styles.main}>
     <div className={`mt-30 mr-15 ${styles.menu}`}>
       <ProfileMenu />
     </div>
     <div className={`mt-10 ${styles.orders}`}>
-      <OrdersList orders={orders} />
+      <OrdersDisplay orders={orders} />
     </div>
   </main>
 );

@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getOrderByNumberApi, orderBurgerApi } from '../../utils/burger-api';
 import { TOrder } from '@utils-types';
 import { RootState } from '../store';
 
-export interface orderStateInterface {
+export interface OrderState {
   order: TOrder | null;
   userOrder: TOrder | null;
   orders: TOrder[];
@@ -13,30 +13,35 @@ export interface orderStateInterface {
   orderError: string | null;
 }
 
-export const initialState: orderStateInterface = {
+const initialState: OrderState = {
   order: null,
+  userOrder: null,
   orders: [],
   loading: false,
   error: null,
-  userOrder: null,
   orderLoading: false,
-  orderError: null
+  orderError: null,
 };
 
-export const getOrderNumber = createAsyncThunk(
+// Получение заказа по номеру
+export const getOrderNumber = createAsyncThunk<TOrder, number>(
   'orders/getOrderNumber',
-  async (data: number) => {
-    const response = await getOrderByNumberApi(data);
-    return response.orders[0]; // Возвращаем первый заказ напрямую
+  async (orderNumber) => {
+    const response = await getOrderByNumberApi(orderNumber);
+    return response.orders[0]; // Берём первый заказ
   }
 );
 
-export const userOrder = createAsyncThunk(
+// Создание пользовательского заказа
+export const userOrder = createAsyncThunk<TOrder, string[]>(
   'user/order',
-  async (data: string[]) => orderBurgerApi(data)
+  async (ingredients) => {
+    const response = await orderBurgerApi(ingredients);
+    return response;
+  }
 );
 
-export const orderSlice = createSlice({
+const orderSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
@@ -46,7 +51,7 @@ export const orderSlice = createSlice({
     clearUserOrder(state) {
       state.userOrder = null;
     },
-    setOrderLoading(state, action) {
+    setOrderLoading(state, action: PayloadAction<boolean>) {
       state.orderLoading = action.payload;
     }
   },
@@ -62,31 +67,30 @@ export const orderSlice = createSlice({
       })
       .addCase(getOrderNumber.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch order';
+        state.error = action.error.message ?? 'Failed to fetch order';
       })
       .addCase(userOrder.pending, (state) => {
         state.orderLoading = true;
         state.orderError = null;
       })
       .addCase(userOrder.fulfilled, (state, action) => {
-        state.userOrder = action.payload.order;
+        state.userOrder = action.payload.order ?? action.payload; // В зависимости от API
         state.orderLoading = false;
       })
       .addCase(userOrder.rejected, (state, action) => {
         state.orderLoading = false;
-        state.orderError = action.error.message || 'Failed to fetch order';
+        state.orderError = action.error.message ?? 'Failed to fetch order';
       });
   }
 });
 
-export const { clearOrder } = orderSlice.actions;
+export const { clearOrder, clearUserOrder, setOrderLoading } = orderSlice.actions;
 
-//selectors
+// Селекторы
 export const orderLoadingSelector = (state: RootState) => state.orders.loading;
 export const orderSelector = (state: RootState) => state.orders.order;
 
 export const userOrderSelector = (state: RootState) => state.orders.userOrder;
-export const userOrderLoadingSelector = (state: RootState) =>
-  state.orders.orderLoading;
+export const userOrderLoadingSelector = (state: RootState) => state.orders.orderLoading;
 
-export const { clearUserOrder, setOrderLoading } = orderSlice.actions;
+export default orderSlice.reducer;

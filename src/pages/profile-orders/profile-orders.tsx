@@ -1,7 +1,9 @@
+import React, { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+
 import { ProfileOrdersUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
-import { FC, useEffect } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
+
 import {
   fetchUserOrdersThunk,
   selectUserOrderHistory
@@ -9,12 +11,13 @@ import {
 import { getFeeds } from '../../services/slices/feed';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchUserOrdersThunk());
     dispatch(getFeeds());
-  }, []);
+  }, [dispatch]);
+
   const orders: TOrder[] = useSelector((state) =>
     selectUserOrderHistory(state.user)
   );

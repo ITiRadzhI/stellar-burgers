@@ -1,3 +1,23 @@
+import React, { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useParams,
+  useNavigate
+} from 'react-router-dom';
+
+import { useDispatch, useSelector } from '../../services/store';
+import {
+  loadIngredients
+} from '../../services/slices/ingredients';
+import {
+  verifyUserAuth,
+  selectIsAuthVerified
+} from '../../services/slices/user';
+
 import {
   ConstructorPage,
   Feed,
@@ -9,31 +29,19 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
+
 import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-  useLocation,
-  useParams,
-  useNavigate
-} from 'react-router-dom';
+  AppHeader,
+  OrderInfo,
+  IngredientDetails,
+  Modal
+} from '@components';
+
 import '../../index.css';
 import styles from './app.module.css';
 
-import { useDispatch, useSelector } from '../../services/store';
-import { useEffect } from 'react';
-import { loadIngredients } from '../../services/slices/ingredients';
-import {
-  verifyUserAuth,
-  selectIsAuthVerified
-} from '../../services/slices/user';
-
-import { AppHeader, OrderInfo, IngredientDetails, Modal } from '@components';
-
-const isAuthenticated = () => {
-  const isAuth = useSelector((state) => selectIsAuthVerified(state.user));
-  return isAuth;
+const useAuth = () => {
+  return useSelector(state => selectIsAuthVerified(state.user));
 };
 
 interface ProtectedRouteProps {
@@ -41,23 +49,23 @@ interface ProtectedRouteProps {
   requiresAuth: boolean;
 }
 
-// Компонент для защиты маршрутов
-const ProtectedRoute = ({ element, requiresAuth }: ProtectedRouteProps) => {
-  const auth = isAuthenticated();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, requiresAuth }) => {
+  const isAuth = useAuth();
+
   if (requiresAuth) {
-    return auth ? element : <Navigate to='/login' />;
-  } else {
-    return !auth ? element : <Navigate to='/' />;
+    return isAuth ? element : <Navigate to="/login" replace />;
   }
+
+  return !isAuth ? element : <Navigate to="/" replace />;
 };
 
-const OrderInfoModal = () => {
+const OrderInfoModal: React.FC = () => {
   const { number } = useParams<{ number: string }>();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleClose = () => {
-    if (location.state && location.state.background) {
+  const onClose = () => {
+    if (location.state?.background) {
       navigate(-1);
     } else {
       navigate('/feed');
@@ -65,19 +73,19 @@ const OrderInfoModal = () => {
   };
 
   return (
-    <Modal title='Информация о заказе' onClose={handleClose}>
+    <Modal title="Информация о заказе" onClose={onClose}>
       {number && <OrderInfo orderNumber={number} />}
     </Modal>
   );
 };
 
-const IngredientsDetailsModal = () => {
+const IngredientDetailsModal: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleClose = () => {
-    if (location.state && location.state.background) {
+  const onClose = () => {
+    if (location.state?.background) {
       navigate(-1);
     } else {
       navigate('/');
@@ -85,87 +93,74 @@ const IngredientsDetailsModal = () => {
   };
 
   return (
-    <Modal title='Детали ингредиента' onClose={handleClose}>
+    <Modal title="Детали ингредиента" onClose={onClose}>
       {id && <IngredientDetails />}
     </Modal>
   );
 };
 
-const ModalSwitch = () => {
+const ModalSwitch: React.FC = () => {
   const location = useLocation();
-  const background = location.state && location.state.background;
+  const background = location.state?.background;
 
   return (
     <>
       <Routes location={background || location}>
-        <Route path='/' element={<ConstructorPage />} />
-        <Route path='/feed' element={<Feed />} />
+        <Route path="/" element={<ConstructorPage />} />
+        <Route path="/feed" element={<Feed />} />
         <Route
-          path='/login'
+          path="/login"
           element={<ProtectedRoute element={<Login />} requiresAuth={false} />}
         />
         <Route
-          path='/register'
-          element={
-            <ProtectedRoute element={<Register />} requiresAuth={false} />
-          }
+          path="/register"
+          element={<ProtectedRoute element={<Register />} requiresAuth={false} />}
         />
         <Route
-          path='/forgot-password'
-          element={
-            <ProtectedRoute element={<ForgotPassword />} requiresAuth={false} />
-          }
+          path="/forgot-password"
+          element={<ProtectedRoute element={<ForgotPassword />} requiresAuth={false} />}
         />
         <Route
-          path='/reset-password'
-          element={
-            <ProtectedRoute element={<ResetPassword />} requiresAuth={false} />
-          }
+          path="/reset-password"
+          element={<ProtectedRoute element={<ResetPassword />} requiresAuth={false} />}
         />
         <Route
-          path='/profile'
+          path="/profile"
           element={<ProtectedRoute element={<Profile />} requiresAuth />}
         />
         <Route
-          path='/profile/orders'
+          path="/profile/orders"
           element={<ProtectedRoute element={<ProfileOrders />} requiresAuth />}
         />
         <Route
-          path='/profile/orders/:number'
+          path="/profile/orders/:number"
           element={<ProtectedRoute element={<ProfileOrders />} requiresAuth />}
         />
-        <Route path='/feed/:number' element={<Feed />} />
-        <Route path='/ingredients/:id' element={<ConstructorPage />} />
-        <Route path='*' element={<NotFound404 />} />
+        <Route path="/feed/:number" element={<Feed />} />
+        <Route path="/ingredients/:id" element={<ConstructorPage />} />
+        <Route path="*" element={<NotFound404 />} />
       </Routes>
 
-      {background && (
+      {background ? (
         <Routes>
-          <Route path='/profile/orders/:number' element={<OrderInfoModal />} />
-          <Route path='/feed/:number' element={<OrderInfoModal />} />
-          <Route
-            path='/ingredients/:id'
-            element={<IngredientsDetailsModal />}
-          />
+          <Route path="/profile/orders/:number" element={<OrderInfoModal />} />
+          <Route path="/feed/:number" element={<OrderInfoModal />} />
+          <Route path="/ingredients/:id" element={<IngredientDetailsModal />} />
         </Routes>
-      )}
-
-      {!background && (
+      ) : (
         <Routes>
-          <Route path='/profile/orders/:number' element={<OrderInfoModal />} />
-          <Route path='/feed/:number' element={<OrderInfoModal />} />
-          <Route
-            path='/ingredients/:id'
-            element={<IngredientsDetailsModal />}
-          />
+          <Route path="/profile/orders/:number" element={<OrderInfoModal />} />
+          <Route path="/feed/:number" element={<OrderInfoModal />} />
+          <Route path="/ingredients/:id" element={<IngredientDetailsModal />} />
         </Routes>
       )}
     </>
   );
 };
 
-const App = () => {
+const App: React.FC = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(loadIngredients());
     dispatch(verifyUserAuth());

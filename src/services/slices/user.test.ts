@@ -8,7 +8,6 @@ import {
   fetchUserOrdersThunk,
   updateUserDataThunk,
   logoutUserThunk,
-  UserState,
   initialUserState
 } from './user';
 
@@ -30,13 +29,11 @@ describe('userSlice reducer', () => {
     }
   ];
 
-  it('должно возвращать начальное состояние', () => {
-    expect(userSlice.reducer(undefined, { type: 'unknown' })).toEqual(
-      initialUserState
-    );
+  it('should return initial state by default', () => {
+    expect(userSlice.reducer(undefined, { type: 'unknown' })).toEqual(initialUserState);
   });
 
-  it('должен обрабатывать registerUserThunk.pending', () => {
+  it('should handle registerUserThunk.pending', () => {
     const action = { type: registerUserThunk.pending.type };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
@@ -46,11 +43,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать registerUserThunk.fulfilled', () => {
-    const action = {
-      type: registerUserThunk.fulfilled.type,
-      payload: { user: mockUser }
-    };
+  it('should handle registerUserThunk.fulfilled', () => {
+    const action = { type: registerUserThunk.fulfilled.type, payload: { user: mockUser } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -60,11 +54,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать registerUserThunk.rejected', () => {
-    const action = {
-      type: registerUserThunk.rejected.type,
-      error: { message: 'Failed to register user' }
-    };
+  it('should handle registerUserThunk.rejected', () => {
+    const action = { type: registerUserThunk.rejected.type, error: { message: 'Failed to register user' } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -73,7 +64,7 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать loginUserThunk.pending', () => {
+  it('should handle loginUserThunk.pending', () => {
     const action = { type: loginUserThunk.pending.type };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
@@ -83,11 +74,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать loginUserThunk.fulfilled', () => {
-    const action = {
-      type: loginUserThunk.fulfilled.type,
-      payload: { user: mockUser }
-    };
+  it('should handle loginUserThunk.fulfilled', () => {
+    const action = { type: loginUserThunk.fulfilled.type, payload: { user: mockUser } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -97,11 +85,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать loginUserThunk.rejected', () => {
-    const action = {
-      type: loginUserThunk.rejected.type,
-      error: { message: 'Failed to login user' }
-    };
+  it('should handle loginUserThunk.rejected', () => {
+    const action = { type: loginUserThunk.rejected.type, error: { message: 'Failed to login user' } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -110,7 +95,7 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать fetchUserDataThunk.pending', () => {
+  it('should handle fetchUserDataThunk.pending', () => {
     const action = { type: fetchUserDataThunk.pending.type };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
@@ -120,11 +105,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать fetchUserDataThunk.fulfilled', () => {
-    const action = {
-      type: fetchUserDataThunk.fulfilled.type,
-      payload: { user: mockUser }
-    };
+  it('should handle fetchUserDataThunk.fulfilled', () => {
+    const action = { type: fetchUserDataThunk.fulfilled.type, payload: { user: mockUser } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -134,11 +116,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать fetchUserDataThunk.rejected', () => {
-    const action = {
-      type: fetchUserDataThunk.rejected.type,
-      error: { message: 'Failed to fetch user data' }
-    };
+  it('should handle fetchUserDataThunk.rejected', () => {
+    const action = { type: fetchUserDataThunk.rejected.type, error: { message: 'Failed to fetch user data' } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -148,7 +127,7 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать fetchUserOrdersThunk.pending', () => {
+  it('should handle fetchUserOrdersThunk.pending', () => {
     const action = { type: fetchUserOrdersThunk.pending.type };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
@@ -158,11 +137,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать fetchUserOrdersThunk.fulfilled', () => {
-    const action = {
-      type: fetchUserOrdersThunk.fulfilled.type,
-      payload: mockOrders
-    };
+  it('should handle fetchUserOrdersThunk.fulfilled', () => {
+    const action = { type: fetchUserOrdersThunk.fulfilled.type, payload: mockOrders };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -171,11 +147,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать fetchUserOrdersThunk.rejected', () => {
-    const action = {
-      type: fetchUserOrdersThunk.rejected.type,
-      error: { message: 'Failed to fetch user orders' }
-    };
+  it('should handle fetchUserOrdersThunk.rejected', () => {
+    const action = { type: fetchUserOrdersThunk.rejected.type, error: { message: 'Failed to fetch user orders' } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -184,7 +157,7 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать updateUserDataThunk.pending', () => {
+  it('should handle updateUserDataThunk.pending', () => {
     const action = { type: updateUserDataThunk.pending.type };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
@@ -194,11 +167,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать updateUserDataThunk.fulfilled', () => {
-    const action = {
-      type: updateUserDataThunk.fulfilled.type,
-      payload: { user: mockUser }
-    };
+  it('should handle updateUserDataThunk.fulfilled', () => {
+    const action = { type: updateUserDataThunk.fulfilled.type, payload: { user: mockUser } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -208,11 +178,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать updateUserDataThunk.rejected', () => {
-    const action = {
-      type: updateUserDataThunk.rejected.type,
-      error: { message: 'Failed to update user data' }
-    };
+  it('should handle updateUserDataThunk.rejected', () => {
+    const action = { type: updateUserDataThunk.rejected.type, error: { message: 'Failed to update user data' } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,
@@ -221,7 +188,7 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать logoutUserThunk.pending', () => {
+  it('should handle logoutUserThunk.pending', () => {
     const action = { type: logoutUserThunk.pending.type };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
@@ -231,18 +198,10 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать logoutUserThunk.fulfilled', () => {
+  it('should handle logoutUserThunk.fulfilled', () => {
     const action = { type: logoutUserThunk.fulfilled.type };
-    const state = userSlice.reducer(
-      {
-        ...initialUserState,
-        userInfo: {
-          email: 'test@example.com',
-          name: 'Test User'
-        }
-      },
-      action
-    );
+    const prevState = { ...initialUserState, userInfo: mockUser, isAuthVerified: true };
+    const state = userSlice.reducer(prevState, action);
     expect(state).toEqual({
       ...initialUserState,
       userInfo: null,
@@ -251,11 +210,8 @@ describe('userSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать logoutUserThunk.rejected', () => {
-    const action = {
-      type: logoutUserThunk.rejected.type,
-      error: { message: 'Failed to logout user' }
-    };
+  it('should handle logoutUserThunk.rejected', () => {
+    const action = { type: logoutUserThunk.rejected.type, error: { message: 'Failed to logout user' } };
     const state = userSlice.reducer(initialUserState, action);
     expect(state).toEqual({
       ...initialUserState,

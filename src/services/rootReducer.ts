@@ -1,4 +1,4 @@
-// путь src\services\rootReducer.ts
+// путь src/services/rootReducer.ts
 import { combineReducers } from '@reduxjs/toolkit';
 import { ingredientsSlice } from './slices/ingredients';
 import { burgerConstructorSlice } from './slices/burgerConstructor';
@@ -11,5 +11,5 @@ export const rootReducer = combineReducers({
   ingredients: ingredientsSlice.reducer,
   burgerConstructor: burgerConstructorSlice.reducer,
   feed: feedSlice.reducer,
-  orders: orderSlice.reducer
+  orders: orderSlice.reducer,
 });

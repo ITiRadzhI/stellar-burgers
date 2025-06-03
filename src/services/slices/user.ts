@@ -29,24 +29,21 @@ export const initialUserState: UserState = {
   isUserRequesting: false,
   isOrderRequesting: false,
   userOrderHistory: [],
-  registrationInfo: null
+  registrationInfo: null,
 };
 
-export const verifyUserAuth = createAsyncThunk(
-  'auth/verifyUserAuth',
-  async () => {
-    try {
-      const data = await getUserApi();
-      if (data && data.user) {
-        return data;
-      }
-      throw new Error('User not authenticated');
-    } catch (error) {
-      console.log(`авторизация не пройдена: ${error}`);
-      throw new Error('Failed to verify user authentication');
+export const verifyUserAuth = createAsyncThunk('auth/verifyUserAuth', async () => {
+  try {
+    const data = await getUserApi();
+    if (data?.user) {
+      return data;
     }
+    throw new Error('User not authenticated');
+  } catch (error) {
+    console.error(`Authorization failed: ${error}`);
+    throw new Error('Failed to verify user authentication');
   }
-);
+});
 
 export const registerUserThunk = createAsyncThunk(
   'auth/registerUser',
@@ -54,7 +51,7 @@ export const registerUserThunk = createAsyncThunk(
     try {
       const data = await registerUserApi(registrationInfo);
       return data;
-    } catch (error) {
+    } catch {
       throw new Error('Failed to register user');
     }
   }
@@ -71,7 +68,7 @@ export const loginUserThunk = createAsyncThunk(
       setCookie('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
       return data;
-    } catch (error) {
+    } catch {
       throw new Error('Failed to login user');
     }
   }
@@ -83,42 +80,36 @@ export const updateUserDataThunk = createAsyncThunk(
     try {
       const updatedData = await updateUserApi(data);
       return updatedData;
-    } catch (error) {
+    } catch {
       throw new Error('Failed to update user data');
     }
   }
 );
 
-export const fetchUserDataThunk = createAsyncThunk(
-  'auth/fetchUserData',
-  async () => {
-    try {
-      const data = await getUserApi();
-      return data;
-    } catch (error) {
-      throw new Error('Failed to fetch user data');
-    }
+export const fetchUserDataThunk = createAsyncThunk('auth/fetchUserData', async () => {
+  try {
+    const data = await getUserApi();
+    return data;
+  } catch {
+    throw new Error('Failed to fetch user data');
   }
-);
+});
 
-export const fetchUserOrdersThunk = createAsyncThunk(
-  'auth/fetchUserOrders',
-  async () => {
-    try {
-      const data = await getOrdersApi();
-      return data;
-    } catch (error) {
-      throw new Error('Failed to fetch user orders');
-    }
+export const fetchUserOrdersThunk = createAsyncThunk('auth/fetchUserOrders', async () => {
+  try {
+    const data = await getOrdersApi();
+    return data;
+  } catch {
+    throw new Error('Failed to fetch user orders');
   }
-);
+});
 
 export const logoutUserThunk = createAsyncThunk('auth/logoutUser', async () => {
   try {
     await logoutApi();
     localStorage.clear();
     deleteCookie('accessToken');
-  } catch (error) {
+  } catch {
     throw new Error('Failed to logout user');
   }
 });
@@ -140,8 +131,9 @@ export const userSlice = createSlice({
       })
       .addCase(registerUserThunk.rejected, (state, action) => {
         state.isUserRequesting = false;
-        state.errorMsg = action.error.message as string;
+        state.errorMsg = action.error.message ?? null;
       })
+
       .addCase(loginUserThunk.pending, (state) => {
         state.isUserRequesting = true;
         state.errorMsg = null;
@@ -153,8 +145,9 @@ export const userSlice = createSlice({
       })
       .addCase(loginUserThunk.rejected, (state, action) => {
         state.isUserRequesting = false;
-        state.errorMsg = action.error.message as string;
+        state.errorMsg = action.error.message ?? null;
       })
+
       .addCase(fetchUserDataThunk.pending, (state) => {
         state.isUserRequesting = true;
         state.errorMsg = null;
@@ -167,8 +160,9 @@ export const userSlice = createSlice({
       .addCase(fetchUserDataThunk.rejected, (state, action) => {
         state.userInfo = null;
         state.isUserRequesting = false;
-        state.errorMsg = action.error.message as string;
+        state.errorMsg = action.error.message ?? null;
       })
+
       .addCase(fetchUserOrdersThunk.pending, (state) => {
         state.isOrderRequesting = true;
         state.errorMsg = null;
@@ -179,8 +173,9 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUserOrdersThunk.rejected, (state, action) => {
         state.isOrderRequesting = false;
-        state.errorMsg = action.error.message as string;
+        state.errorMsg = action.error.message ?? null;
       })
+
       .addCase(updateUserDataThunk.pending, (state) => {
         state.isUserRequesting = true;
         state.errorMsg = null;
@@ -192,8 +187,9 @@ export const userSlice = createSlice({
       })
       .addCase(updateUserDataThunk.rejected, (state, action) => {
         state.isUserRequesting = false;
-        state.errorMsg = action.error.message as string;
+        state.errorMsg = action.error.message ?? null;
       })
+
       .addCase(logoutUserThunk.pending, (state) => {
         state.isUserRequesting = true;
         state.errorMsg = null;
@@ -205,8 +201,9 @@ export const userSlice = createSlice({
       })
       .addCase(logoutUserThunk.rejected, (state, action) => {
         state.isUserRequesting = false;
-        state.errorMsg = action.error.message as string;
+        state.errorMsg = action.error.message ?? null;
       })
+
       .addCase(verifyUserAuth.pending, (state) => {
         state.isUserRequesting = true;
         state.errorMsg = null;
@@ -220,17 +217,14 @@ export const userSlice = createSlice({
         state.userInfo = null;
         state.isAuthVerified = false;
         state.isUserRequesting = false;
-        state.errorMsg = action.error.message as string;
+        state.errorMsg = action.error.message ?? null;
       });
-  }
+  },
 });
 
 // Selectors
 export const selectCurrentUser = (state: UserState) => state.userInfo;
-export const selectUserOrderHistory = (state: UserState) =>
-  state.userOrderHistory;
-export const selectIsOrderRequesting = (state: UserState) =>
-  state.isOrderRequesting;
-export const selectIsUserRequesting = (state: UserState) =>
-  state.isUserRequesting;
+export const selectUserOrderHistory = (state: UserState) => state.userOrderHistory;
+export const selectIsOrderRequesting = (state: UserState) => state.isOrderRequesting;
+export const selectIsUserRequesting = (state: UserState) => state.isUserRequesting;
 export const selectIsAuthVerified = (state: UserState) => state.isAuthVerified;

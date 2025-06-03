@@ -1,17 +1,17 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TIngredient, ingredientStateInterface } from '../../utils/types';
 import { ingredientsSlice, loadIngredients, initialState } from './ingredients';
+import { TIngredient } from '../../utils/types';
 
 describe('ingredientsSlice reducer', () => {
-  it('возвращать начальное состояние', () => {
+  it('возвращает начальное состояние при неизвестном действии', () => {
     expect(ingredientsSlice.reducer(undefined, { type: 'unknown' })).toEqual(
       initialState
     );
   });
 
-  it('должен обрабатывать loadIngredients.pending', () => {
+  it('обрабатывает loadIngredients.pending (устанавливает isLoading в true и сбрасывает ошибку)', () => {
     const action = { type: loadIngredients.pending.type };
     const state = ingredientsSlice.reducer(initialState, action);
+
     expect(state).toEqual({
       ...initialState,
       isLoading: true,
@@ -19,7 +19,7 @@ describe('ingredientsSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать loadIngredients.fulfilled', () => {
+  it('обрабатывает loadIngredients.fulfilled (обновляет список ингредиентов и категории)', () => {
     const mockData: TIngredient[] = [
       {
         _id: '1',
@@ -64,6 +64,7 @@ describe('ingredientsSlice reducer', () => {
 
     const action = { type: loadIngredients.fulfilled.type, payload: mockData };
     const state = ingredientsSlice.reducer(initialState, action);
+
     expect(state).toEqual({
       ...initialState,
       isLoading: false,
@@ -74,9 +75,10 @@ describe('ingredientsSlice reducer', () => {
     });
   });
 
-  it('должен обрабатывать loadIngredients.rejected', () => {
+  it('обрабатывает loadIngredients.rejected (сбрасывает isLoading)', () => {
     const action = { type: loadIngredients.rejected.type };
     const state = ingredientsSlice.reducer(initialState, action);
+
     expect(state).toEqual({
       ...initialState,
       isLoading: false

@@ -1,73 +1,75 @@
 import { FC, useMemo } from 'react';
-import { TConstructorIngredient } from '@utils-types';
-import { BurgerConstructorUI } from '@ui';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
+
+import { BurgerConstructorUI } from '@ui';
+import { TConstructorIngredient } from '@utils-types';
+
 import {
   bunSelector,
   ingredientSelector
 } from '../../services/slices/burgerConstructor';
-import { useNavigate } from 'react-router-dom';
+
 import {
-  clearUserOrder,
-  setOrderLoading,
   userOrder,
+  setOrderLoading,
+  clearUserOrder,
   userOrderLoadingSelector,
   userOrderSelector
 } from '../../services/slices/orders';
+
 import { selectIsAuthVerified } from '../../services/slices/user';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAutificated = useSelector((state) =>
-    selectIsAuthVerified(state.user)
-  );
-  const constructorItems = {
-    bun: useSelector(bunSelector),
-    ingredients: useSelector(ingredientSelector)
-  };
+
+  const isAuthenticated = useSelector(state => selectIsAuthVerified(state.user));
+  const bun = useSelector(bunSelector);
+  const ingredients = useSelector(ingredientSelector);
 
   const orderRequest = useSelector(userOrderLoadingSelector);
-
   const orderModalData = useSelector(userOrderSelector);
 
-  const ingredients = constructorItems.ingredients.map((i) => i._id);
-  let fullIngredientList: string[];
+  // Формируем полный список ингредиентов для заказа (булка + начинка + булка)
+  const fullIngredientList = bun
+    ? [bun._id, ...ingredients.map(i => i._id), bun._id]
+    : ingredients.map(i => i._id);
 
-  if (constructorItems.bun) {
-    const { _id: bun } = constructorItems.bun;
-    fullIngredientList = [bun, ...ingredients, bun];
-  } else {
-    fullIngredientList = ingredients;
-  }
+  const price = useMemo(() => {
+    const bunPrice = bun ? bun.price * 2 : 0;
+    const ingredientsPrice = ingredients.reduce(
+      (total: number, item: TConstructorIngredient) => total + item.price,
+      0
+    );
+    return bunPrice + ingredientsPrice;
+  }, [bun, ingredients]);
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) {
+    if (!bun) {
       alert('Добавьте булочки');
       return;
-    } else if (isAutificated && constructorItems.bun) {
+    }
+
+    if (orderRequest) {
+      return; // Уже отправляется заказ — блокируем повторный клик
+    }
+
+    if (isAuthenticated) {
       dispatch(userOrder(fullIngredientList));
-      console.log('Отправляемые данные заказа:', fullIngredientList);
       dispatch(setOrderLoading(true));
+      console.log('Отправляемые данные заказа:', fullIngredientList);
     } else {
       navigate('/login');
     }
   };
+
   const closeOrderModal = () => {
     dispatch(setOrderLoading(false));
     dispatch(clearUserOrder());
   };
 
-  const price = useMemo(
-    () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
-        (s: number, v: TConstructorIngredient) => s + v.price,
-        0
-      ),
-    [constructorItems]
-  );
+  const constructorItems = { bun, ingredients };
 
   return (
     <BurgerConstructorUI

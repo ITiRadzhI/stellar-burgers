@@ -1,32 +1,27 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getFeedsApi, TFeedsResponse } from '../../utils/burger-api';
-import { feedStateInterface } from '../../utils/types';
-import { RootState } from '../store';
 import { feedSlice, getFeeds, initialState } from './feed';
+import { TFeedsResponse } from '../../utils/burger-api';
 
-// Мокаем getFeedsApi для тестирования
+
 jest.mock('../../utils/burger-api', () => ({
   getFeedsApi: jest.fn()
 }));
 
-// Тесты для редьюсера
 describe('feedSlice reducer', () => {
-  it('возвращать начальное состояние', () => {
-    expect(feedSlice.reducer(undefined, { type: 'unknown' })).toEqual(
-      initialState
-    );
+  it('возвращает начальное состояние при неизвестном действии', () => {
+    expect(feedSlice.reducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
-  it('должен обрабатывать getFeeds.pending', () => {
+  it('обрабатывает getFeeds.pending (устанавливает loading в true)', () => {
     const action = { type: getFeeds.pending.type };
     const state = feedSlice.reducer(initialState, action);
+
     expect(state).toEqual({
       ...initialState,
       loading: true
     });
   });
 
-  it('должен обрабатывать getFeeds.fulfilled', () => {
+  it('обрабатывает getFeeds.fulfilled (обновляет состояние с полученными данными)', () => {
     const mockData: TFeedsResponse = {
       success: true,
       orders: [
@@ -46,21 +41,24 @@ describe('feedSlice reducer', () => {
 
     const action = { type: getFeeds.fulfilled.type, payload: mockData };
     const state = feedSlice.reducer(initialState, action);
+
     expect(state).toEqual({
       ...initialState,
       orders: mockData.orders,
       total: mockData.total,
       totalToday: mockData.totalToday,
-      loading: false
+      loading: false,
+      error: undefined
     });
   });
 
-  it('должен обрабатывать getFeeds.rejected', () => {
+  it('обрабатывает getFeeds.rejected (устанавливает ошибку и сбрасывает loading)', () => {
     const action = {
       type: getFeeds.rejected.type,
       error: { message: 'Fetch failed' }
     };
     const state = feedSlice.reducer(initialState, action);
+
     expect(state).toEqual({
       ...initialState,
       loading: false,

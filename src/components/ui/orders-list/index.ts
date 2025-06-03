@@ -1,1 +1,1 @@
-export { OrdersListUI } from './orders-list';
+export { OrdersDisplay } from './orders-list';

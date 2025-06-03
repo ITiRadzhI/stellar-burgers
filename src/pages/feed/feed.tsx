@@ -1,13 +1,13 @@
+import React, { FC, useEffect } from 'react';
+import { useSelector, useDispatch } from '../../services/store';
+
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
-import { FC, useEffect } from 'react';
-import { useSelector } from '../../services/store';
+
 import { getFeeds, selectFeedOrders } from '../../services/slices/feed';
-import { useDispatch } from '../../services/store';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,9 +23,7 @@ export const Feed: FC = () => {
   return (
     <FeedUI
       orders={orders}
-      handleGetFeeds={() => {
-        dispatch(getFeeds());
-      }}
+      handleGetFeeds={() => dispatch(getFeeds())}
     />
   );
 };

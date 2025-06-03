@@ -4,14 +4,14 @@
   justify-content: space-between;
 }
 
-.article {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+.text {
+  text-align: center;
+}
+
+.addButton {
   width: 260px;
-  cursor: pointer;
-  text-decoration: none;
-  color: #ffff;
+  display: flex;
+  justify-content: center;
 }
 
 .cost {
@@ -20,11 +20,12 @@
   justify-content: center;
 }
 
-.text {
-  text-align: center;
-}
-
-.addButton {
+.article {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   width: 260px;
-  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
 }

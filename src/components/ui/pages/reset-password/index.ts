@@ -1,1 +1,1 @@
-export { ResetPasswordUI } from './reset-password';
+export { PasswordResetForm } from './reset-password';

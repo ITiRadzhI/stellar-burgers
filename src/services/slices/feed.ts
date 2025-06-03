@@ -24,6 +24,7 @@ export const feedSlice = createSlice({
     builder
       .addCase(getFeeds.pending, (state) => {
         state.loading = true;
+        state.error = null; // можно сбросить ошибку при начале загрузки
       })
       .addCase(getFeeds.fulfilled, (state, action) => {
         state.orders = action.payload.orders;
@@ -33,11 +34,12 @@ export const feedSlice = createSlice({
       })
       .addCase(getFeeds.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message as string;
+        state.error = action.error.message ?? 'Unknown error';
       });
   }
 });
 
+// Селекторы для доступа к состоянию
 export const selectFeedOrders = (state: RootState) => state.feed.orders;
 export const selectFeedTotalOrders = (state: RootState) => state.feed.total;
 export const selectFeedTotalToday = (state: RootState) => state.feed.totalToday;

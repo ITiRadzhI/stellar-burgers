@@ -6,8 +6,12 @@
   color: #f2f2f3;
 }
 
-::-webkit-scrollbar {
-  width: 8px;
+.detailPageWrap {
+  margin: 120px auto;
+}
+
+.detailHeader {
+  text-align: center;
 }
 
 ::-webkit-scrollbar-track {
@@ -19,10 +23,6 @@
   background: #8585ad;
 }
 
-.detailPageWrap {
-  margin: 120px auto;
-}
-
-.detailHeader {
-  text-align: center;
+::-webkit-scrollbar {
+  width: 8px;
 }

@@ -1,4 +1,4 @@
-export type ProfileMenuUIProps = {
+export type UserMenuProps = {
   pathname: string;
   handleLogout: () => void;
 };

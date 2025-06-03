@@ -1,5 +1,4 @@
 import { TConstructorIngredient } from '@utils-types';
-
 import {
   createSelector,
   createSlice,
@@ -34,8 +33,8 @@ export const burgerConstructorSlice = createSlice({
           state.ingredients.push(action.payload);
         }
       }
-      // Добавьте другие редьюсеры по необходимости (например, для удаления ингредиентов)
     },
+
     moveIngredientUp(state, action: PayloadAction<number>) {
       const index = action.payload;
       if (index > 0 && index < state.ingredients.length) {
@@ -47,9 +46,10 @@ export const burgerConstructorSlice = createSlice({
         state.ingredients = newIngredients;
       }
     },
+
     moveIngredientDown(state, action: PayloadAction<number>) {
       const index = action.payload;
-      if (index < state.ingredients.length - 1) {
+      if (index >= 0 && index < state.ingredients.length - 1) {
         const newIngredients = [...state.ingredients];
         [newIngredients[index + 1], newIngredients[index]] = [
           newIngredients[index],
@@ -58,7 +58,8 @@ export const burgerConstructorSlice = createSlice({
         state.ingredients = newIngredients;
       }
     },
-    removeIngredient: (state, action: PayloadAction<{ id: string }>) => {
+
+    removeIngredient(state, action: PayloadAction<{ id: string }>) {
       state.ingredients = state.ingredients.filter(
         (ingredient) => ingredient.id !== action.payload.id
       );
@@ -77,12 +78,12 @@ const selectConstructor = (state: RootState) => state.burgerConstructor;
 
 export const bunSelector = createSelector(
   [selectConstructor],
-  (item) => item.bun
+  (constructor) => constructor.bun
 );
 
 export const ingredientSelector = createSelector(
   [selectConstructor],
-  (item) => item.ingredients
+  (constructor) => constructor.ingredients
 );
 
-// export default burgerConstructorSlice.reducer;
+export default burgerConstructorSlice.reducer;
