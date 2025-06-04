@@ -1,3 +1,13 @@
+.columnOrders {
+  width: 608px;
+}
+
+.columnInfo {
+  width: 580px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .containerMain {
   display: flex;
   flex-direction: column;
@@ -23,12 +33,3 @@
   overflow: hidden;
 }
 
-.columnOrders {
-  width: 608px;
-}
-
-.columnInfo {
-  overflow-y: auto;
-  overflow-x: hidden;
-  width: 580px;
-}

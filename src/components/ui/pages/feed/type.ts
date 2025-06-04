@@ -1,6 +1,7 @@
 import { TOrder } from '@utils-types';
 
-export type FeedUIProps = {
+export type FeedDisplayProps = {
   orders: TOrder[];
   handleGetFeeds: () => void;
+  onRefresh: () => void;
 };

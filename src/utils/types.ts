@@ -38,3 +38,26 @@ export type TUser = {
 };
 
 export type TTabMode = 'bun' | 'sauce' | 'main';
+
+export interface ingredientStateInterface {
+  buns: TIngredient[];
+  sauces: TIngredient[];
+  mains: TIngredient[];
+  ingredients: TIngredient[];
+  isLoading: boolean;
+  error: null;
+}
+
+export interface feedStateInterface {
+  error: string | null;
+  loading: boolean;
+  total: number;
+  orders: TOrder[];
+  totalToday: number;
+}
+
+export type TNewOrderResponse = {
+  success: boolean;
+  order: TOrder;
+  name: string;
+};

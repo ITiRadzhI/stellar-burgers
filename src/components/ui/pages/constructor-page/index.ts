@@ -1,1 +1,1 @@
-export { ConstructorPageUI } from './constructor-page';
+export { BuilderPage } from './constructor-page';

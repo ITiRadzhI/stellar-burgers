@@ -1,4 +1,6 @@
-export type ProfileMenuUIProps = {
-  pathname: string;
+export type UserMenuProps = {
   handleLogout: () => void;
+  currentPath: string;
+  onLogout: () => void;
+  pathname: string;
 };

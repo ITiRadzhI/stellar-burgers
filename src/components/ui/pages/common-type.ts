@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, SyntheticEvent } from 'react';
 
-export type PageUIProps = {
-  errorText: string | undefined;
-  email: string;
-  setEmail: Dispatch<SetStateAction<string>>;
-  handleSubmit: (e: SyntheticEvent) => void;
+export type PageProps = {
+  emailValue: string;
+  setEmailValue: Dispatch<SetStateAction<string>>;
+  errorMessage?: string;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 };

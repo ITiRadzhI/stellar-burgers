@@ -1,11 +1,15 @@
 import React, { FC } from 'react';
-import { OrderStatusUIProps } from './type';
 
-export const OrderStatusUI: FC<OrderStatusUIProps> = ({ textStyle, text }) => (
+interface StatusDisplayProps {
+  color: string;
+  label: string;
+}
+
+export const StatusDisplay: FC<StatusDisplayProps> = ({ color, label }) => (
   <span
-    className='text text_type_main-default pt-2'
-    style={{ color: textStyle }}
+    className="text text_type_main-default pt-2"
+    style={{ color }}
   >
-    {text}
+    {label}
   </span>
 );

@@ -1,10 +1,20 @@
 import React from 'react';
 import type { Preview } from '@storybook/react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-const preview: Preview = {
+const withRouterDecorator = (Story: any) => (
+  <Router>
+    <div style={{ padding: '20px', width: 'fit-content' }}>
+      <Story />
+    </div>
+  </Router>
+);
+
+const previewConfig: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    actions: {
+      argTypesRegex: '^on[A-Z].*'
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -12,15 +22,7 @@ const preview: Preview = {
       }
     }
   },
-  decorators: [
-    (Story) => (
-      <BrowserRouter>
-        <div style={{ padding: 20, width: 'fit-content' }}>
-          <Story />
-        </div>
-      </BrowserRouter>
-    )
-  ]
+  decorators: [withRouterDecorator]
 };
 
-export default preview;
+export default previewConfig;
