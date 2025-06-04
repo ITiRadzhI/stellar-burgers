@@ -6,9 +6,9 @@ import {
 } from '@zlden/react-developer-burger-ui-components';
 import styles from '../common.module.css';
 import { Link } from 'react-router-dom';
-import { RegistrationFormProps } from './type';
+import { RegisterUIProps } from './type';
 
-export const RegistrationForm: FC<RegistrationFormProps> = ({
+export const RegistrationForm: FC<RegisterUIProps> = ({
   errorMessage,
   emailValue,
   setEmailValue,

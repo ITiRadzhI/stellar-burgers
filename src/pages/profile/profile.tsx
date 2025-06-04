@@ -5,11 +5,12 @@ import {
   selectCurrentUser,
   updateUserDataThunk
 } from '../../services/slices/user';
-import { ProfileUI } from '@ui-pages';
+import { UserProfile } from '@ui-pages';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
   const profileInfo = useSelector((state) => selectCurrentUser(state.user));
+  const errorMessage = useSelector((state) => state.user.errorMsg || ""); // если нет ошибки — пустая строка
 
   // Инициализация локального состояния формы на основе данных пользователя из стора
   const [formValue, setFormValue] = useState({
@@ -57,12 +58,13 @@ export const Profile: FC = () => {
   };
 
   return (
-    <ProfileUI
+    <UserProfile
       formValue={formValue}
       isFormChanged={isFormChanged}
-      handleCancel={handleCancel}
       handleSubmit={handleSubmit}
+      handleCancel={handleCancel}
       handleInputChange={handleInputChange}
+      errorMessage={errorMessage}
     />
   );
 };

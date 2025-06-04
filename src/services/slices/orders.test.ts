@@ -1,118 +1,77 @@
 import { TOrder } from '../../utils/types';
-import { orderSlice, getOrderNumber, userOrder } from './orders';
-import { initialState } from './orders';
+import ordersReducer, {
+  createOrder,
+  clearUserOrder,
+  setOrderLoading
+} from './orders';
 
-describe('orderSlice reducer', () => {
-  const mockOrder: TOrder = {
-    _id: '1',
-    status: 'done',
-    name: 'Test Order',
-    createdAt: '2022-01-01T00:00:00.000Z',
-    updatedAt: '2022-01-01T00:00:00.000Z',
-    number: 123,
-    ingredients: ['1', '2', '3']
-  };
+const initialState = {
+  order: null,
+  status: 'idle' as 'idle',
+  error: null
+};
 
-  const mockUserOrder: TOrder = {
-    _id: '1',
-    status: 'done',
-    name: 'Test User Order',
-    createdAt: '2022-01-01T00:00:00.000Z',
-    updatedAt: '2022-01-01T00:00:00.000Z',
-    number: 456,
-    ingredients: ['1', '2', '3']
-  };
+const mockOrder: TOrder = {
+  _id: '1',
+  status: 'done',
+  name: 'Test Order',
+  createdAt: '2022-01-01T00:00:00.000Z',
+  updatedAt: '2022-01-01T00:00:00.000Z',
+  number: 123,
+  ingredients: ['1', '2', '3']
+};
 
-  it('should handle getOrderNumber.pending', () => {
-    const action = { type: getOrderNumber.pending.type };
-    const state = orderSlice.reducer(initialState, action);
+describe('ordersSlice reducer', () => {
+  it('should handle createOrder.pending', () => {
+    const action = { type: createOrder.pending.type };
+    const state = ordersReducer(initialState, action);
     expect(state).toEqual({
       ...initialState,
-      loading: true,
+      status: 'loading',
       error: null
     });
   });
 
-  it('should handle getOrderNumber.fulfilled', () => {
-    const action = { type: getOrderNumber.fulfilled.type, payload: mockOrder };
-    const state = orderSlice.reducer(initialState, action);
+  it('should handle createOrder.fulfilled', () => {
+    const action = { type: createOrder.fulfilled.type, payload: mockOrder };
+    const state = ordersReducer(initialState, action);
     expect(state).toEqual({
       ...initialState,
       order: mockOrder,
-      loading: false
+      status: 'succeeded'
     });
   });
 
-  it('should handle getOrderNumber.rejected', () => {
+  it('should handle createOrder.rejected', () => {
     const action = {
-      type: getOrderNumber.rejected.type,
-      error: { message: 'Failed to fetch order' }
+      type: createOrder.rejected.type,
+      payload: 'Failed to create order'
     };
-    const state = orderSlice.reducer(initialState, action);
+    const state = ordersReducer(initialState, action);
     expect(state).toEqual({
       ...initialState,
-      loading: false,
-      error: 'Failed to fetch order'
-    });
-  });
-
-  it('should handle userOrder.pending', () => {
-    const action = { type: userOrder.pending.type };
-    const state = orderSlice.reducer(initialState, action);
-    expect(state).toEqual({
-      ...initialState,
-      orderLoading: true,
-      orderError: null
-    });
-  });
-
-  it('should handle userOrder.fulfilled', () => {
-    const action = {
-      type: userOrder.fulfilled.type,
-      payload: { order: mockUserOrder }
-    };
-    const state = orderSlice.reducer(initialState, action);
-    expect(state).toEqual({
-      ...initialState,
-      userOrder: mockUserOrder,
-      orderLoading: false
-    });
-  });
-
-  it('should handle userOrder.rejected', () => {
-    const action = {
-      type: userOrder.rejected.type,
-      error: { message: 'Failed to fetch order' }
-    };
-    const state = orderSlice.reducer(initialState, action);
-    expect(state).toEqual({
-      ...initialState,
-      orderLoading: false,
-      orderError: 'Failed to fetch order'
-    });
-  });
-
-  it('should handle clearOrder', () => {
-    const action = { type: orderSlice.actions.clearOrder.type };
-    const state = orderSlice.reducer(
-      { ...initialState, order: mockOrder },
-      action
-    );
-    expect(state).toEqual({
-      ...initialState,
-      order: null
+      status: 'failed',
+      error: 'Failed to create order'
     });
   });
 
   it('should handle clearUserOrder', () => {
-    const action = { type: orderSlice.actions.clearUserOrder.type };
-    const state = orderSlice.reducer(
-      { ...initialState, userOrder: mockUserOrder },
+    const action = { type: clearUserOrder.type };
+    const state = ordersReducer(
+      { ...initialState, order: mockOrder, status: 'succeeded', error: '123' },
       action
     );
     expect(state).toEqual({
+      ...initialState
+    });
+  });
+
+  it('should handle setOrderLoading', () => {
+    const action = { type: setOrderLoading.type, payload: true };
+    const state = ordersReducer(initialState, action);
+    expect(state).toEqual({
       ...initialState,
-      userOrder: null
+      status: 'loading'
     });
   });
 });

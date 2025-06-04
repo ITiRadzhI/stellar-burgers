@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
 
 import { Preloader } from '@ui';
-import { FeedUI } from '@ui-pages';
+import { FeedDisplay } from '@ui-pages';
 import { TOrder } from '@utils-types';
 
 import { getFeeds, selectFeedOrders } from '../../services/slices/feed';
@@ -21,9 +21,10 @@ export const Feed: FC = () => {
   }
 
   return (
-    <FeedUI
+    <FeedDisplay
       orders={orders}
       handleGetFeeds={() => dispatch(getFeeds())}
+      onRefresh={() => dispatch(getFeeds())}
     />
   );
 };

@@ -2,7 +2,7 @@ import React, { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { resetPasswordApi } from '@api';
-import { ResetPasswordUI } from '@ui-pages';
+import { PasswordResetForm } from '@ui-pages';
 
 export const ResetPassword: FC = () => {
   const navigate = useNavigate();
@@ -29,13 +29,13 @@ export const ResetPassword: FC = () => {
   };
 
   return (
-    <ResetPasswordUI
-      errorText={error?.message}
-      password={password}
-      token={token}
-      setPassword={setPassword}
-      setToken={setToken}
-      handleSubmit={handleSubmit}
+    <PasswordResetForm
+      errorMessage={error?.message || ''}
+      passwordValue={password}
+      setPasswordValue={setPassword}
+      tokenValue={token}
+      setTokenValue={setToken}
+      onSubmit={handleSubmit}
     />
   );
 };

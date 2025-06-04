@@ -1,4 +1,4 @@
-import store from './store';
+import {store} from './store';
 import { rootReducer } from './rootReducer';
 
 describe('Store Initialization', () => {

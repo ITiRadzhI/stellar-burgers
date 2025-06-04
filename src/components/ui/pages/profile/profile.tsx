@@ -4,16 +4,16 @@ import { Button, Input } from '@zlden/react-developer-burger-ui-components';
 import styles from './profile.module.css';
 import commonStyles from '../common.module.css';
 
-import { UserProfileProps } from './type';
+import { ProfileUIProps } from './type';
 import { ProfileMenu } from '@components';
 
-export const UserProfile: FC<UserProfileProps> = ({
-  formData,
-  isModified,
-  errorMessage,
-  onSubmit,
-  onCancel,
-  onInputChange
+export const UserProfile: FC<ProfileUIProps> = ({
+  formValue,
+  isFormChanged,
+  handleSubmit,
+  handleCancel,
+  handleInputChange,
+  errorMessage
 }) => (
   <main className={commonStyles.container}>
     <div className={`mt-30 mr-15 ${styles.menu}`}>
@@ -22,14 +22,14 @@ export const UserProfile: FC<UserProfileProps> = ({
 
     <form
       className={`mt-30 ${styles.form} ${commonStyles.form}`}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
       <div className="pb-6">
         <Input
           type="text"
           placeholder="Имя"
-          onChange={onInputChange}
-          value={formData.name}
+          onChange={handleInputChange}
+          value={formValue.name}
           name="name"
           error={false}
           errorText=""
@@ -42,8 +42,8 @@ export const UserProfile: FC<UserProfileProps> = ({
         <Input
           type="email"
           placeholder="E-mail"
-          onChange={onInputChange}
-          value={formData.email}
+          onChange={handleInputChange}
+          value={formValue.email}
           name="email"
           error={false}
           errorText=""
@@ -56,8 +56,8 @@ export const UserProfile: FC<UserProfileProps> = ({
         <Input
           type="password"
           placeholder="Пароль"
-          onChange={onInputChange}
-          value={formData.password}
+          onChange={handleInputChange}
+          value={formValue.password}
           name="password"
           error={false}
           errorText=""
@@ -66,13 +66,13 @@ export const UserProfile: FC<UserProfileProps> = ({
         />
       </div>
 
-      {isModified && (
+      {isFormChanged && (
         <div className={styles.button}>
           <Button
             type="secondary"
             htmlType="button"
             size="medium"
-            onClick={onCancel}
+            onClick={handleCancel}
           >
             Отменить
           </Button>

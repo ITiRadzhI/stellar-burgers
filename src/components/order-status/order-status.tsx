@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { OrderStatusProps } from './type';
-import { OrderStatusUI } from '@ui';
+import { StatusDisplay } from '@ui';
 
 const statusText: Record<string, string> = {
   pending: 'Готовится',
@@ -18,5 +18,5 @@ export const OrderStatus: FC<OrderStatusProps> = ({ status }) => {
   const textStyle = statusColor[status] || '#F2F2F3';
   const text = statusText[status] || 'Неизвестный статус';
 
-  return <OrderStatusUI textStyle={textStyle} text={text} />;
+  return <StatusDisplay color={textStyle} label={text} />;
 };

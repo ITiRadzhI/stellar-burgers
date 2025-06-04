@@ -55,3 +55,9 @@ export interface feedStateInterface {
   orders: TOrder[];
   totalToday: number;
 }
+
+export type TNewOrderResponse = {
+  success: boolean;
+  order: TOrder;
+  name: string;
+};

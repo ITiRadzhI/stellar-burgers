@@ -4,13 +4,11 @@ import { useInView } from 'react-intersection-observer';
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { useSelector } from '../../services/store';
-import { ingredientsSlice } from '../../services/slices/ingredients';
+import { selectIngredientState } from '../../services/slices/ingredients'; 
 
 export const BurgerIngredients: FC = () => {
   // Получаем ингредиенты из состояния Redux
-  const { buns, mains, sauces } = useSelector(
-    ingredientsSlice.selectors.selectIngredientState
-  );
+  const { buns, mains, sauces } = useSelector(selectIngredientState);
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
 
@@ -32,8 +30,8 @@ export const BurgerIngredients: FC = () => {
   }, [inViewBuns, inViewMains, inViewSauces]);
 
   // Обработчик клика по вкладке — плавно прокручиваем к секции
-  const onTabClick = (tab: TTabMode) => {
-    setCurrentTab(tab);
+  const onTabClick = (tab: string) => {
+    setCurrentTab(tab as TTabMode);
     if (tab === 'bun') titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });
     if (tab === 'main') titleMainRef.current?.scrollIntoView({ behavior: 'smooth' });
     if (tab === 'sauce') titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });

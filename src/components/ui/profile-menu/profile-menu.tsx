@@ -7,7 +7,7 @@ interface UserMenuProps {
   onLogout: () => void;
 }
 
-export const UserMenu: FC<UserMenuProps> = ({ currentPath, onLogout }) => (
+export const ProfileMenuUI: FC<UserMenuProps> = ({ currentPath, onLogout }) => (
   <>
     <NavLink
       to="/profile"

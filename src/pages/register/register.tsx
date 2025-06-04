@@ -2,7 +2,7 @@ import React, { FC, SyntheticEvent, useState } from 'react';
 import { useDispatch } from '../../services/store';
 import { useNavigate } from 'react-router-dom';
 
-import { RegisterUI } from '@ui-pages';
+import { RegistrationForm } from '@ui-pages';
 import { registerUserThunk } from '../../services/slices/user';
 
 export const Register: FC = () => {
@@ -36,15 +36,15 @@ export const Register: FC = () => {
   };
 
   return (
-    <RegisterUI
-      errorText={errorMessage}
-      email={email}
-      userName={userName}
-      password={password}
-      setEmail={setEmail}
-      setPassword={setPassword}
-      setUserName={setUserName}
-      handleSubmit={handleSubmit}
+    <RegistrationForm
+      errorMessage={errorMessage}
+      emailValue={email}
+      setEmailValue={setEmail}
+      passwordValue={password}
+      setPasswordValue={setPassword}
+      userNameValue={userName}
+      setUserNameValue={setUserName}
+      onSubmit={handleSubmit}
     />
   );
 };

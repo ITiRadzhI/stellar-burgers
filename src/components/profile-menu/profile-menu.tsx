@@ -13,5 +13,5 @@ export const ProfileMenu: FC = () => {
     dispatch(logoutUserThunk());
   };
 
-  return <ProfileMenuUI handleLogout={onLogout} pathname={pathname} />;
+  return <ProfileMenuUI onLogout={onLogout} currentPath={pathname} />;
 };

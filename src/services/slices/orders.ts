@@ -1,96 +1,65 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getOrderByNumberApi, orderBurgerApi } from '../../utils/burger-api';
-import { TOrder } from '@utils-types';
-import { RootState } from '../store';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { orderBurgerApi } from '../../utils/burger-api';
+import { TOrder, TNewOrderResponse } from '../../utils/types'; 
 
-export interface OrderState {
+export type OrdersState = {
   order: TOrder | null;
-  userOrder: TOrder | null;
-  orders: TOrder[];
-  loading: boolean;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
-  orderLoading: boolean;
-  orderError: string | null;
-}
-
-const initialState: OrderState = {
-  order: null,
-  userOrder: null,
-  orders: [],
-  loading: false,
-  error: null,
-  orderLoading: false,
-  orderError: null,
 };
 
-// Получение заказа по номеру
-export const getOrderNumber = createAsyncThunk<TOrder, number>(
-  'orders/getOrderNumber',
-  async (orderNumber) => {
-    const response = await getOrderByNumberApi(orderNumber);
-    return response.orders[0]; // Берём первый заказ
+const initialState: OrdersState = {
+  order: null,
+  status: 'idle',
+  error: null,
+};
+
+export const createOrder = createAsyncThunk<TOrder, string[], { rejectValue: string }>(
+  'orders/createOrder',
+  async (ingredients, thunkAPI) => {
+    try {
+      const response: TNewOrderResponse = await orderBurgerApi(ingredients);
+      return response.order;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
 );
 
-// Создание пользовательского заказа
-export const userOrder = createAsyncThunk<TOrder, string[]>(
-  'user/order',
-  async (ingredients) => {
-    const response = await orderBurgerApi(ingredients);
-    return response;
-  }
-);
-
-const orderSlice = createSlice({
+const ordersSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
-    clearOrder(state) {
-      state.order = null;
-    },
     clearUserOrder(state) {
-      state.userOrder = null;
+      state.order = null;
+      state.status = 'idle';
+      state.error = null;
     },
-    setOrderLoading(state, action: PayloadAction<boolean>) {
-      state.orderLoading = action.payload;
-    }
+    setOrderLoading(state, action) {
+      state.status = action.payload ? 'loading' : 'idle';
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getOrderNumber.pending, (state) => {
-        state.loading = true;
+      .addCase(createOrder.pending, (state) => {
+        state.status = 'loading';
         state.error = null;
       })
-      .addCase(getOrderNumber.fulfilled, (state, action) => {
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.status = 'succeeded';
         state.order = action.payload;
-        state.loading = false;
       })
-      .addCase(getOrderNumber.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? 'Failed to fetch order';
-      })
-      .addCase(userOrder.pending, (state) => {
-        state.orderLoading = true;
-        state.orderError = null;
-      })
-      .addCase(userOrder.fulfilled, (state, action) => {
-        state.userOrder = action.payload.order ?? action.payload; // В зависимости от API
-        state.orderLoading = false;
-      })
-      .addCase(userOrder.rejected, (state, action) => {
-        state.orderLoading = false;
-        state.orderError = action.error.message ?? 'Failed to fetch order';
+      .addCase(createOrder.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload ?? 'Unknown error';
       });
   }
 });
 
-export const { clearOrder, clearUserOrder, setOrderLoading } = orderSlice.actions;
+export const { clearUserOrder, setOrderLoading } = ordersSlice.actions;
 
-// Селекторы
-export const orderLoadingSelector = (state: RootState) => state.orders.loading;
-export const orderSelector = (state: RootState) => state.orders.order;
+export const userOrderSelector = (state: any) => state.orders.order;
+export const userOrderLoadingSelector = (state: any) => state.orders.status === 'loading';
 
-export const userOrderSelector = (state: RootState) => state.orders.userOrder;
-export const userOrderLoadingSelector = (state: RootState) => state.orders.orderLoading;
+export default ordersSlice.reducer;
 
-export default orderSlice.reducer;

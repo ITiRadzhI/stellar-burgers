@@ -1,33 +1,33 @@
-import React, { FC, useState, SyntheticEvent } from 'react';
+import React, { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { forgotPasswordApi } from '@api';
-import { ForgotPasswordUI } from '@ui-pages';
+import { PasswordRecoveryPage } from '@ui-pages';
 
 export const ForgotPassword: FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [error, setError] = useState<Error | null>(null);
+  const [emailValue, setEmailValue] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
+    setErrorMessage('');
 
-    forgotPasswordApi({ email })
+    forgotPasswordApi({ email: emailValue })
       .then(() => {
         localStorage.setItem('resetPassword', 'true');
         navigate('/reset-password', { replace: true });
       })
-      .catch((err: Error) => setError(err));
+      .catch((err: Error) => setErrorMessage(err.message));
   };
 
   return (
-    <ForgotPasswordUI
-      errorText={error?.message}
-      email={email}
-      setEmail={setEmail}
-      handleSubmit={handleSubmit}
+    <PasswordRecoveryPage
+      errorMessage={errorMessage}
+      emailValue={emailValue}
+      setEmailValue={setEmailValue}
+      onSubmit={onSubmit}
     />
   );
 };

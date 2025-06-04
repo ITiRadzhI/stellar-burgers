@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
 
-import { ProfileOrdersUI } from '@ui-pages';
+import { UserOrdersPage } from '@ui-pages';
 import { TOrder } from '@utils-types';
 
 import {
@@ -22,5 +22,5 @@ export const ProfileOrders: FC = () => {
     selectUserOrderHistory(state.user)
   );
 
-  return <ProfileOrdersUI orders={orders} />;
+  return <UserOrdersPage orders={orders} />;
 };

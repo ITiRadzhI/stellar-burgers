@@ -11,7 +11,7 @@ import {
 } from '../../services/slices/burgerConstructor';
 
 import {
-  userOrder,
+  createOrder,
   setOrderLoading,
   clearUserOrder,
   userOrderLoadingSelector,
@@ -31,7 +31,7 @@ export const BurgerConstructor: FC = () => {
   const orderRequest = useSelector(userOrderLoadingSelector);
   const orderModalData = useSelector(userOrderSelector);
 
-  // Формируем полный список ингредиентов для заказа (булка + начинка + булка)
+  // Список id ингредиентов для заказа (булка + начинка + булка)
   const fullIngredientList = bun
     ? [bun._id, ...ingredients.map(i => i._id), bun._id]
     : ingredients.map(i => i._id);
@@ -52,11 +52,11 @@ export const BurgerConstructor: FC = () => {
     }
 
     if (orderRequest) {
-      return; // Уже отправляется заказ — блокируем повторный клик
+      return; // Заказ уже отправляется, блокируем повторный клик
     }
 
     if (isAuthenticated) {
-      dispatch(userOrder(fullIngredientList));
+      dispatch(createOrder(fullIngredientList));
       dispatch(setOrderLoading(true));
       console.log('Отправляемые данные заказа:', fullIngredientList);
     } else {

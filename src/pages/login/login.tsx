@@ -35,12 +35,12 @@ export const Login: FC = () => {
 
   return (
     <LoginForm
-      errorMessage={errorMessage}
-      emailValue={emailValue}
-      setEmailValue={setEmailValue}
-      passwordValue={passwordValue}
-      setPasswordValue={setPasswordValue}
-      onSubmit={handleSubmit}
+    errorMessage={errorMessage}
+    emailValue={emailValue}
+    setEmailValue={setEmailValue}
+    passwordValue={passwordValue}
+    setPasswordValue={setPasswordValue}
+    onSubmit={handleSubmit}
     />
   );
 };
